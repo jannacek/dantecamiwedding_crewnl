@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ═══════════════════════════════════════════════════════════════
+  DANTE & CAMI × THE DUTCH CREW — 19 DECEMBER 2026 · MENDOZA
+  Sister site to the main guest page. One job: get the headcount
+  so we can book one big house for everyone.
+  ═══════════════════════════════════════════════════════════════
+  FILL-IN CHECKLIST — search this file for "tbd" to find every blank.
+  Placeholders show on the page as amber dashed chips.
+
+  1. Answer-by deadline        → id="plan" + id="rsvp"
+  2. Form endpoint             → replace YOUR_FORM_ID in the <form>
+     (free at formspree.io — replies land in your email.
+      Until then the form politely says it isn't connected.)
+  3. Link to the main site     → footer ("the full guide")
+  4. Pre-wedding day details   → id="dates" (time & place)
+  5. House cost estimate       → id="house" — refine the rough
+     €35–60 guide once you've scouted actual houses.
+
+  NOTES:
+  • Single file, GitHub Pages ready. Host it at e.g. /crew.html or
+    its own repo — it's independent from the main site.
+  • The house cost guide is a rough estimate, clearly marked.
+  ═══════════════════════════════════════════════════════════════
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dante &amp; Cami — the Dutch crew · Mendoza, December 2026</title>
+<meta name="description" content="For the crew flying from the Netherlands to Dante & Cami's wedding in Mendoza: tell us you're in, and we'll book one big house for everyone.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── Tokens (shared family with the main site) ──────────── */
+:root{
+  --paper:#F6F3EE;
+  --paper-2:#EFEAE1;
+  --ink:#2B2430;
+  --ink-soft:#645B69;
+  --malbec:#6E2136;
+  --malbec-deep:#471523;
+  --andes:#46597A;
+  --brass:#A0763A;
+  --sun:#C9992F;
+  --line:#DAD3C7;
+  --tbd-bg:#FBF1D8;
+  --tbd-border:#C9992F;
+  --tbd-ink:#79570F;
+  --radius:12px;
+  --max:920px;               /* cozier than the main site's 1040 */
+  --font-display:"Fraunces",Georgia,serif;
+  --font-body:"Archivo",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:16.5px;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:var(--malbec)}
+:focus-visible{outline:2px solid var(--andes);outline-offset:3px;border-radius:4px}
+.skip-link{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:8px 14px;border-radius:8px;z-index:2000}
+.skip-link:focus{left:8px}
+
+/* ─── Scroll progress ────────────────────────────────────── */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--malbec),var(--sun));
+  z-index:1100;
+}
+
+/* ─── Type helpers ───────────────────────────────────────── */
+.eyebrow{
+  font-size:.72rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--malbec);margin-bottom:14px;
+}
+h2{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(1.85rem,4.2vw,2.7rem);line-height:1.12;
+  letter-spacing:-.01em;margin-bottom:14px;
+}
+h2 em{font-style:italic;color:var(--malbec)}
+.lede{color:var(--ink-soft);max-width:56ch;margin-bottom:36px}
+h3{font-family:var(--font-body);font-weight:600;font-size:1.02rem;letter-spacing:.01em}
+
+/* ─── TBD chips (fill-in-later system) ───────────────────── */
+.tbd{
+  display:inline-block;background:var(--tbd-bg);
+  border:1.5px dashed var(--tbd-border);color:var(--tbd-ink);
+  font-size:.78rem;font-weight:600;letter-spacing:.03em;
+  padding:2px 10px;border-radius:999px;
+  white-space:nowrap;vertical-align:middle;
+}
+.tbd-block{
+  background:var(--tbd-bg);border:1.5px dashed var(--tbd-border);
+  color:var(--tbd-ink);border-radius:var(--radius);
+  padding:12px 16px;font-size:.9rem;
+}
+
+/* ─── Nav ────────────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:1000;
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;padding:14px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.nav-name{
+  font-family:var(--font-display);font-size:1.05rem;color:var(--ink);
+  text-decoration:none;white-space:nowrap;
+}
+.nav-name em{color:var(--malbec)}
+.nav-links{display:flex;gap:22px;list-style:none;align-items:center}
+.nav-links a{
+  text-decoration:none;color:var(--ink-soft);font-size:.88rem;font-weight:500;
+}
+.nav-links a:hover{color:var(--malbec)}
+.nav-links a.nav-cta{
+  background:var(--malbec);color:#fff;padding:7px 16px;border-radius:999px;
+  font-weight:600;
+}
+.nav-links a.nav-cta:hover{background:var(--malbec-deep);color:#fff}
+@media (max-width:640px){
+  .nav-links{gap:14px}
+  .nav-links li.hide-sm{display:none}
+}
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.hero{
+  position:relative;overflow:hidden;
+  padding:76px 22px 0;text-align:center;
+}
+.hero-inner{max-width:var(--max);margin:0 auto;position:relative;z-index:2}
+.hero .eyebrow{color:var(--brass)}
+.hero h1{
+  font-family:var(--font-display);font-weight:300;
+  font-size:clamp(2.5rem,7vw,4.3rem);line-height:1.06;
+  letter-spacing:-.015em;margin-bottom:18px;
+}
+.hero h1 em{font-style:italic;color:var(--malbec)}
+.hero .sub{
+  color:var(--ink-soft);max-width:52ch;margin:0 auto 14px;
+  font-size:1.02rem;
+}
+.hero .date-line{
+  font-family:var(--font-display);font-size:1.12rem;color:var(--andes);
+  margin-bottom:26px;
+}
+.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.btn{
+  display:inline-block;text-decoration:none;font-weight:600;font-size:.95rem;
+  padding:13px 28px;border-radius:999px;transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn-primary{background:var(--malbec);color:#fff}
+.btn-primary:hover{background:var(--malbec-deep);transform:translateY(-2px);box-shadow:0 10px 22px rgba(110,33,54,.25)}
+.btn-ghost{border:1.5px solid var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--brass);color:var(--malbec);transform:translateY(-2px)}
+.countdown{
+  font-size:.85rem;color:var(--ink-soft);letter-spacing:.04em;margin-bottom:8px;
+}
+.countdown strong{color:var(--malbec);font-weight:700}
+
+/* the signature: sea level → 921 m */
+.journey{
+  max-width:1100px;margin:26px auto -4px;position:relative;
+  color:var(--andes);
+}
+.journey svg{width:100%;height:auto}
+.journey .draw{
+  stroke-dasharray:2600;stroke-dashoffset:2600;
+  animation:draw 2.6s ease-out .3s forwards;
+}
+.journey .sun-dot{opacity:0;animation:sunrise 1.4s ease-out 2.1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes sunrise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){
+  .journey .draw{animation:none;stroke-dashoffset:0}
+  .journey .sun-dot{animation:none;opacity:1}
+}
+.journey text{
+  font-family:var(--font-body);font-size:12.5px;letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600;fill:var(--ink-soft);
+}
+.journey-caption{display:none}
+@media (max-width:640px){
+  .journey text{display:none}
+  .journey-caption{
+    display:block;font-size:.7rem;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);text-align:center;
+    padding:6px 0 14px;
+  }
+}
+
+/* ─── Sections & dividers ────────────────────────────────── */
+.section{padding:72px 22px}
+.section.alt{background:var(--paper-2)}
+.section-inner{max-width:var(--max);margin:0 auto}
+.ridge-divider{color:var(--line);max-width:var(--max);margin:0 auto;padding:0 22px}
+.ridge-divider svg{width:100%;height:24px}
+
+/* ─── Cards & grids ──────────────────────────────────────── */
+.grid{display:grid;gap:18px}
+.cols-2{grid-template-columns:repeat(2,1fr)}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:820px){.cols-3{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.cols-2,.cols-3{grid-template-columns:1fr}}
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;transition:transform .2s ease, box-shadow .2s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(43,36,48,.08)}
+.card .k{
+  display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--brass);margin-bottom:10px;
+}
+.card h3{margin-bottom:8px}
+.card p{font-size:.94rem;color:var(--ink-soft)}
+.fineprint{font-size:.8rem;color:var(--ink-soft);margin-top:18px}
+
+/* ─── The plan: 3 numbered steps (a real sequence) ───────── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:720px){.steps{grid-template-columns:1fr}}
+.step{
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 22px;position:relative;
+}
+.step .n{
+  font-family:var(--font-display);font-style:italic;font-size:2.1rem;
+  color:var(--brass);line-height:1;margin-bottom:12px;
+}
+.step h3{margin-bottom:8px}
+.step p{font-size:.94rem;color:var(--ink-soft)}
+
+/* ─── Timeline ───────────────────────────────────────────── */
+.timeline{list-style:none;border-left:2px solid var(--line);margin-left:8px}
+.timeline li{position:relative;padding:0 0 26px 26px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{
+  content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;
+  border-radius:50%;background:var(--paper);border:2.5px solid var(--brass);
+}
+.timeline li.big::before{background:var(--malbec);border-color:var(--malbec)}
+.timeline .t-date{
+  font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brass);
+}
+.timeline li.big .t-date{color:var(--malbec)}
+.timeline h3{margin:2px 0 4px}
+.timeline p{font-size:.94rem;color:var(--ink-soft);max-width:58ch}
+
+/* ─── Form ───────────────────────────────────────────────── */
+form{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:30px;max-width:640px;
+}
+.f-row{margin-bottom:20px}
+.f-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.f-2col{grid-template-columns:1fr}}
+label{
+  display:block;font-size:.82rem;font-weight:600;letter-spacing:.03em;
+  margin-bottom:7px;color:var(--ink);
+}
+label .opt{font-weight:400;color:var(--ink-soft)}
+input[type=text],input[type=email],input[type=number],input[type=date],select,textarea{
+  width:100%;font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:10px;
+  padding:11px 14px;transition:border-color .15s ease;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--andes)}
+textarea{resize:vertical;min-height:90px}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pills input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+.pills label.pill{
+  display:inline-block;margin:0;cursor:pointer;font-weight:500;font-size:.92rem;
+  border:1.5px solid var(--line);border-radius:999px;padding:9px 18px;
+  color:var(--ink-soft);background:var(--paper);
+  transition:all .15s ease;
+}
+.pills input[type=radio]:checked + label.pill{
+  background:var(--malbec);border-color:var(--malbec);color:#fff;
+}
+.pills input[type=radio]:focus-visible + label.pill{outline:2px solid var(--andes);outline-offset:3px}
+button[type=submit]{
+  font-family:var(--font-body);font-size:1rem;font-weight:600;color:#fff;
+  background:var(--malbec);border:none;border-radius:999px;padding:14px 34px;
+  cursor:pointer;transition:background .18s ease, transform .18s ease;
+}
+button[type=submit]:hover{background:var(--malbec-deep);transform:translateY(-2px)}
+#form-status{margin-top:14px;font-size:.92rem}
+#form-status.ok{color:#2E6B3E;font-weight:600}
+#form-status.err{color:var(--malbec);font-weight:600}
+
+/* ─── Reveal on scroll ───────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ─── Footer ─────────────────────────────────────────────── */
+footer{
+  background:var(--ink);color:#CFC8C2;padding:56px 22px;text-align:center;
+}
+footer .foot-ridge{color:#4A4250;max-width:420px;margin:0 auto 26px}
+footer .names{font-family:var(--font-display);font-size:1.5rem;color:#fff;margin-bottom:8px}
+footer .names em{color:var(--sun)}
+footer p{font-size:.9rem;max-width:56ch;margin:0 auto 10px}
+footer a{color:var(--sun)}
+footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;color:#fff;margin-top:20px}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="progress" aria-hidden="true"></div>
+
+<nav aria-label="Main">
+  <div class="nav-inner">
+    <a class="nav-name" href="#top">Dante <em>&amp;</em> Cami <span style="color:var(--brass)">· crew</span></a>
+    <ul class="nav-links">
+      <li class="hide-sm"><a href="#plan">The plan</a></li>
+      <li class="hide-sm"><a href="#dates">Dates</a></li>
+      <li class="hide-sm"><a href="#house">The house</a></li>
+      <li><a href="#rsvp" class="nav-cta">Count me in</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ═══ HERO ═══ -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <p class="eyebrow">For the crew from the lowlands</p>
+    <h1>One big house<br>under the <em>Andes</em></h1>
+    <p class="sub">Dante &amp; Cami are getting married in Mendoza — and instead of scattering across hotels, the plan is to rent one big house for all of us, a 10–15 minute ride from the party. We just need to know one thing: <strong>are you in?</strong></p>
+    <p class="date-line">17–19 December 2026 · Chacras de Coria, Mendoza, Argentina</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#rsvp">Count me in →</a>
+      <a class="btn btn-ghost" href="#plan">How it works</a>
+    </div>
+    <p class="countdown" id="countdown" aria-live="polite"></p>
+  </div>
+
+  <!-- Signature: the journey from sea level to 921 m -->
+  <div class="journey" aria-hidden="true">
+    <svg viewBox="0 0 1200 210" fill="none" preserveAspectRatio="xMidYMax meet">
+      <!-- sun over the Andes -->
+      <circle class="sun-dot" cx="985" cy="52" r="16" fill="var(--sun)" opacity=".9"/>
+      <!-- one continuous line: flat polder → rising foothills → jagged ridge -->
+      <path class="draw" d="M0 168 L180 168 L360 168 L430 166 L500 158 L560 146 L620 128 L665 138 L710 112 L755 124 L800 92 L840 104 L885 70 L925 84 L965 58 L1000 72 L1040 46 L1080 62 L1120 40 L1160 55 L1200 44"
+            stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- windmill on the flat bit -->
+      <g class="draw" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M150 168 L150 140"/>
+        <path d="M150 140 L138 128 M150 140 L162 128 M150 140 L138 152 M150 140 L162 152"/>
+      </g>
+      <text x="110" y="192">Amsterdam · −2 m</text>
+      <text x="960" y="192" text-anchor="start">Chacras de Coria · 921 m</text>
+    </svg>
+    <p class="journey-caption">Amsterdam · −2 m &nbsp;→&nbsp; Chacras de Coria · 921 m</p>
+  </div>
+</header>
+
+<!-- ═══ THE PLAN ═══ -->
+<div class="section" id="plan">
+  <div class="section-inner">
+    <p class="eyebrow">How this works</p>
+    <h2>Three steps, <em>zero</em> hassle</h2>
+    <p class="lede">You handle your flight; we handle the roof. The house only gets booked once we know exactly how many we are — so your answer is genuinely the thing that makes it happen.</p>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="n">1</div>
+        <h3>You confirm</h3>
+        <p>Fill in the form below — whether you're coming, how many of you, and your dates. Please answer by <span class="tbd">tbd: deadline</span>. Dutch directness welcome: a fast "no" helps us more than a slow "maybe".</p>
+      </div>
+      <div class="step reveal">
+        <div class="n">2</div>
+        <h3>We book the house</h3>
+        <p>With the final headcount we'll pick a house big enough for everyone — pool, big table, and a 10–15 minute Uber from the wedding. We'll book it from <strong>Tue 15 Dec (check-in)</strong> to <strong>Mon 21 Dec (check-out)</strong>.</p>
+      </div>
+      <div class="step reveal">
+        <div class="n">3</div>
+        <h3>We split the cost</h3>
+        <p>Everyone pays their share of the nights they stay — simple split, sorted in the group chat (a Tikkie will find you). Then all that's left is showing up.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ridge-divider" aria-hidden="true"><svg viewBox="0 0 1200 34" fill="none" preserveAspectRatio="none"><path d="M0 24 L400 24 L470 18 L540 25 L620 8 L700 21 L790 5 L880 17 L970 9 L1070 22 L1200 13" stroke="currentColor" stroke-width="1.3"/></svg></div>
+
+<!-- ═══ THE DATES ═══ -->
+<div class="section" id="dates">
+  <div class="section-inner">
+    <p class="eyebrow">Mark the calendar</p>
+    <h2>The <em>days</em> that matter</h2>
+    <p class="lede">The wedding weekend in one glance. The house runs from <strong>Tue 15 Dec (check-in)</strong> to <strong>Mon 21 Dec (check-out)</strong> — six summer nights under the Andes.</p>
+
+    <ul class="timeline">
+      <li class="reveal">
+        <span class="t-date">Tue 15 – Wed 16 Dec</span>
+        <h3>Fly out &amp; land in Mendoza</h3>
+        <p>Aim to arrive by the 16th so you're rested (and time-zone adjusted — Argentina is 4 hours behind NL in December) before things kick off. First asado at the house, obviously.</p>
+      </li>
+      <li class="reveal">
+        <span class="t-date">Thu 17 Dec</span>
+        <h3>Pre-wedding day</h3>
+        <p>A day for <em>everyone</em> travelling from abroad — not just our house, but all the international guests together. Time and details to follow — <span class="tbd">tbd: time &amp; place</span>.</p>
+      </li>
+      <li class="reveal">
+        <span class="t-date">Fri 18 Dec</span>
+        <h3>Free day</h3>
+        <p>Pool, siesta, a winery lunch if you're feeling ambitious. Officially a rest day; historically, never actually restful.</p>
+      </li>
+      <li class="big reveal">
+        <span class="t-date">Sat 19 Dec</span>
+        <h3>The wedding 🎉</h3>
+        <p>Dante &amp; Cami get married at Villa Elina, Chacras de Coria — an evening ceremony, a long dinner, and dancing until the Andes turn pink. This is the whole reason. Don't plan anything for the 20th.</p>
+      </li>
+      <li class="reveal">
+        <span class="t-date">Sun 20 Dec</span>
+        <h3>After-wedding</h3>
+        <p>The traditional day-after gathering — slow start, pool, leftovers upgraded into lunch, and everyone comparing notes on the night before.</p>
+      </li>
+      <li class="reveal">
+        <span class="t-date">Mon 21 Dec</span>
+        <h3>Check-out — bye bye 👋</h3>
+        <p>Keys back, hugs, airport runs. Or keep going — the Uco Valley, rafting in Potrerillos and the drive up to Aconcagua are all nearby if you're stretching this into a proper Argentina trip.</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="ridge-divider" aria-hidden="true"><svg viewBox="0 0 1200 34" fill="none" preserveAspectRatio="none"><path d="M0 24 L400 24 L470 18 L540 25 L620 8 L700 21 L790 5 L880 17 L970 9 L1070 22 L1200 13" stroke="currentColor" stroke-width="1.3"/></svg></div>
+
+<!-- ═══ THE HOUSE ═══ -->
+<div class="section alt" id="house">
+  <div class="section-inner">
+    <p class="eyebrow">Our base camp</p>
+    <h2>What we're <em>looking</em> for</h2>
+    <p class="lede">Chacras de Coria and its surroundings are full of quintas — big houses with gardens and pools. Shared between all of us, a great house costs less than mediocre hotel rooms. Booked <strong>Tue 15 → Mon 21 Dec</strong>, six nights.</p>
+
+    <div class="grid cols-3">
+      <div class="card reveal">
+        <span class="k">Location</span>
+        <h3>10–15 min by Uber</h3>
+        <p>A short ride from Villa Elina — Ubers in Mendoza are cheap and plentiful, and we'll sort shared rides on the big nights so nobody's doing logistics at 4 a.m.</p>
+      </div>
+      <div class="card reveal">
+        <span class="k">Essentials</span>
+        <h3>Pool &amp; parrilla</h3>
+        <p>December in Mendoza is high-desert summer: ~30&nbsp;°C and relentlessly sunny. A pool is non-negotiable. So is a proper grill.</p>
+      </div>
+      <div class="card reveal">
+        <span class="k">Cost</span>
+        <h3>Roughly €35–60 a night</h3>
+        <p>Per person, based on typical group houses in the area — the exact number depends on the house and the headcount. We'll confirm before booking: <span class="tbd">tbd: final estimate</span>.</p>
+      </div>
+    </div>
+
+    <p class="fineprint">Couples and room-sharing all get sorted in the group chat once we know who's coming.</p>
+  </div>
+</div>
+
+<div class="ridge-divider" aria-hidden="true"><svg viewBox="0 0 1200 34" fill="none" preserveAspectRatio="none"><path d="M0 24 L400 24 L470 18 L540 25 L620 8 L700 21 L790 5 L880 17 L970 9 L1070 22 L1200 13" stroke="currentColor" stroke-width="1.3"/></svg></div>
+
+<!-- ═══ RSVP / COUNT ME IN ═══ -->
+<div class="section alt" id="rsvp">
+  <div class="section-inner">
+    <p class="eyebrow">The whole point of this page</p>
+    <h2>Count me <em>in</em></h2>
+    <p class="lede">Two minutes, and the house hunt can start. Please answer by <span class="tbd">tbd: deadline</span> — and if plans change later, just tell us in the group chat, on WhatsApp (<a href="https://wa.me/31634359415">+31 6 3435 9415</a> or <a href="https://wa.me/5492616862946">+54 9 261 686 2946</a>) or at <a href="mailto:dfmartinezcaram@gmail.com">dfmartinezcaram@gmail.com</a>.</p>
+
+    <form id="rsvp-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+      <div class="f-row">
+        <label for="f-name">Your name(s)</label>
+        <input type="text" id="f-name" name="name" autocomplete="name" required placeholder="e.g. Sanne &amp; Joris">
+      </div>
+
+      <div class="f-row">
+        <label id="verdict-label">The verdict</label>
+        <div class="pills" role="radiogroup" aria-labelledby="verdict-label">
+          <input type="radio" id="v-yes" name="attending" value="Yes, we're in!" required>
+          <label class="pill" for="v-yes">We're in! 🎉</label>
+          <input type="radio" id="v-no" name="attending" value="Sadly can't make it">
+          <label class="pill" for="v-no">Sadly, no</label>
+        </div>
+      </div>
+
+      <div class="f-row f-2col">
+        <div>
+          <label for="f-count">How many of you?</label>
+          <input type="number" id="f-count" name="party_size" min="1" max="10" value="1">
+        </div>
+        <div>
+          <label for="f-contact">Email or WhatsApp</label>
+          <input type="text" id="f-contact" name="contact" autocomplete="email" placeholder="so we can reach you" required>
+        </div>
+      </div>
+
+      <div class="f-row f-2col">
+        <div>
+          <label for="f-arrive">Arriving</label>
+          <input type="date" id="f-arrive" name="arrival">
+        </div>
+        <div>
+          <label for="f-depart">Leaving</label>
+          <input type="date" id="f-depart" name="departure">
+        </div>
+      </div>
+
+      <div class="f-row f-2col">
+        <div>
+          <label for="f-arr-flight">Arrival flight no. &amp; time</label>
+          <input type="text" id="f-arr-flight" name="arrival_flight" placeholder="e.g. KL701 · 09:45">
+        </div>
+        <div>
+          <label for="f-dep-flight">Departure flight no. &amp; time</label>
+          <input type="text" id="f-dep-flight" name="departure_flight" placeholder="e.g. KL702 · 13:30">
+        </div>
+      </div>
+
+      <div class="f-row">
+        <label id="house-label">Staying in the group house?</label>
+        <div class="pills" role="radiogroup" aria-labelledby="house-label">
+          <input type="radio" id="h-yes" name="group_house" value="Yes — count me in for the house">
+          <label class="pill" for="h-yes">Yes, obviously</label>
+          <input type="radio" id="h-no" name="group_house" value="No — booking my own place">
+          <label class="pill" for="h-no">I'll book my own</label>
+        </div>
+      </div>
+
+      <div class="f-row">
+        <label for="f-notes">Anything else? <span class="opt">(dietary stuff, kids, +1 questions, stroopwafel import volume…)</span></label>
+        <textarea id="f-notes" name="notes" placeholder="Tell us anything useful for planning"></textarea>
+      </div>
+
+      <button type="submit">Send it →</button>
+      <p id="form-status" role="status"></p>
+    </form>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-ridge" aria-hidden="true"><svg viewBox="0 0 420 30" fill="none" preserveAspectRatio="none"><path d="M0 24 L120 24 L165 18 L210 8 L255 16 L300 6 L350 15 L420 10" stroke="currentColor" stroke-width="1.4"/></svg></div>
+  <p class="names">Dante <em>&amp;</em> Cami</p>
+  <p>19 December 2026 · Villa Elina, Chacras de Coria, Mendoza</p>
+  <p>Questions? WhatsApp <a href="https://wa.me/31634359415">+31 6 3435 9415</a> · <a href="https://wa.me/5492616862946">+54 9 261 686 2946</a> · <a href="mailto:dfmartinezcaram@gmail.com">dfmartinezcaram@gmail.com</a></p>
+  <p>Full travel guide (flights, money, eSIMs, wineries) on the <span class="tbd">tbd: main site link</span></p>
+  <p class="tot">Tot in Mendoza! 🇳🇱 → 🇦🇷</p>
+</footer>
+
+<script>
+/* ── Countdown to the wedding ── */
+(function(){
+  var el = document.getElementById('countdown');
+  var target = new Date('2026-12-19T18:00:00-03:00');
+  var days = Math.max(0, Math.ceil((target - new Date()) / 86400000));
+  el.innerHTML = days > 0
+    ? '<strong>' + days + ' days</strong> until the wedding — flights won\u2019t get cheaper'
+    : 'It\u2019s wedding time \uD83C\uDF89';
+})();
+
+/* ── Scroll progress bar ── */
+(function(){
+  var bar = document.getElementById('progress');
+  addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    bar.style.width = (p * 100) + '%';
+  }, {passive:true});
+})();
+
+/* ── Reveal on scroll ── */
+(function(){
+  if (!('IntersectionObserver' in window)){
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e, i){
+      if (e.isIntersecting){
+        e.target.style.transitionDelay = (Math.min(i,4) * 70) + 'ms';
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+
+/* ── Form: inline submit via Formspree ── */
+(function(){
+  var form = document.getElementById('rsvp-form');
+  var status = document.getElementById('form-status');
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (!form.checkValidity()){ form.reportValidity(); return; }
+    if (form.action.indexOf('YOUR_FORM_ID') !== -1){
+      status.className = 'err';
+      status.textContent = 'The form isn\u2019t connected yet — message us directly for now, or poke Agustin to add the Formspree ID.';
+      return;
+    }
+    status.className = '';
+    status.textContent = 'Sending\u2026';
+    fetch(form.action, {
+      method:'POST',
+      body:new FormData(form),
+      headers:{'Accept':'application/json'}
+    }).then(function(r){
+      if (r.ok){
+        status.className = 'ok';
+        status.textContent = '\u2713 Got it — you\u2019re on the list. See you under the Andes!';
+        form.reset();
+      } else {
+        throw new Error();
+      }
+    }).catch(function(){
+      status.className = 'err';
+      status.textContent = 'That didn\u2019t send — try again, or just message us directly.';
+    });
+  });
+})();
+</script>
+</body>
+</html>
