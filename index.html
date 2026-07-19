@@ -11,9 +11,15 @@
   Placeholders show on the page as amber dashed chips.
 
   1. Answer-by deadline        → id="plan" + id="rsvp"
-  2. Form endpoint             → replace YOUR_FORM_ID in the <form>
-     (free at formspree.io — replies land in your email.
-      Until then the form politely says it isn't connected.)
+  2. FORM — connected via formsubmit.co → dfmartinezcaram@gmail.com
+     ONE-TIME STEP: the very first submission triggers an
+     activation email from FormSubmit to that inbox. Open it,
+     click "Activate" — done. Every RSVP then arrives as a
+     tidy table-formatted email.
+     • To receive at a different address: change the email in
+       the <form action="..."> line below (re-activate once).
+     • To CC a second inbox, add inside the form:
+       <input type="hidden" name="_cc" value="other@email.com">
   3. Link to the main site     → footer ("the full guide")
   4. Pre-wedding day details   → id="dates" (time & place)
   5. House cost estimate       → id="house" — refine the rough
@@ -431,7 +437,7 @@ footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;
       <li class="reveal">
         <span class="t-date">Sun 20 Dec</span>
         <h3>After-wedding</h3>
-        <p>The traditional day-after gathering — slow start, pool, and everyone comparing notes on the night before.</p>
+        <p>The traditional day-after gathering — slow start, pool, leftovers upgraded into lunch, and everyone comparing notes on the night before.</p>
       </li>
       <li class="reveal">
         <span class="t-date">Mon 21 Dec</span>
@@ -469,7 +475,7 @@ footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;
       </div>
     </div>
 
-    <p class="fineprint">Each family/couple/single unit gets their own room.</p>
+    <p class="fineprint">Each family/couple/single unit gets a room.</p>
   </div>
 </div>
 
@@ -482,7 +488,14 @@ footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;
     <h2>Count me <em>in</em></h2>
     <p class="lede">Two minutes, and the house hunt can start. Please answer by <span class="tbd">tbd: deadline</span> — and if plans change later, just tell us in the group chat, on WhatsApp (<a href="https://wa.me/31634359415">+31 6 3435 9415</a> or <a href="https://wa.me/5492616862946">+54 9 261 686 2946</a>) or at <a href="mailto:dfmartinezcaram@gmail.com">dfmartinezcaram@gmail.com</a>.</p>
 
-    <form id="rsvp-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+    <form id="rsvp-form" action="https://formsubmit.co/ajax/dfmartinezcaram@gmail.com" method="POST" novalidate>
+      <!-- FormSubmit config: email subject (set per-submission by JS),
+           table-formatted email, and a honeypot field that bots fill
+           in and humans never see — those submissions get dropped. -->
+      <input type="hidden" name="_subject" value="Crew RSVP">
+      <input type="hidden" name="_template" value="table">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
       <div class="f-row">
         <label for="f-name">Your name(s)</label>
         <input type="text" id="f-name" name="name" autocomplete="name" required placeholder="e.g. Sanne &amp; Joris">
@@ -603,18 +616,16 @@ footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 })();
 
-/* ── Form: inline submit via Formspree ── */
+/* ── Form: inline submit via FormSubmit (formsubmit.co) ── */
 (function(){
   var form = document.getElementById('rsvp-form');
   var status = document.getElementById('form-status');
   form.addEventListener('submit', function(ev){
     ev.preventDefault();
     if (!form.checkValidity()){ form.reportValidity(); return; }
-    if (form.action.indexOf('YOUR_FORM_ID') !== -1){
-      status.className = 'err';
-      status.textContent = 'The form isn\u2019t connected yet — message us directly for now, or poke Agustin to add the Formspree ID.';
-      return;
-    }
+    var name = (document.getElementById('f-name').value || '').trim();
+    form.querySelector('input[name=_subject]').value =
+      'Crew RSVP \u2014 ' + (name || 'someone mysterious');
     status.className = '';
     status.textContent = 'Sending\u2026';
     fetch(form.action, {
@@ -622,16 +633,26 @@ footer .tot{font-family:var(--font-display);font-style:italic;font-size:1.05rem;
       body:new FormData(form),
       headers:{'Accept':'application/json'}
     }).then(function(r){
-      if (r.ok){
+      return r.json().catch(function(){ return {}; }).then(function(d){
+        return {ok:r.ok, data:d};
+      });
+    }).then(function(res){
+      var d = res.data || {};
+      var success = res.ok && (d.success === 'true' || d.success === true);
+      if (success){
         status.className = 'ok';
-        status.textContent = '\u2713 Got it — you\u2019re on the list. See you under the Andes!';
+        status.textContent = '\u2713 Got it \u2014 you\u2019re on the list. See you under the Andes!';
         form.reset();
+      } else if (d.message){
+        /* e.g. FormSubmit's one-time "confirmation email sent" notice */
+        status.className = 'err';
+        status.textContent = d.message;
       } else {
         throw new Error();
       }
     }).catch(function(){
       status.className = 'err';
-      status.textContent = 'That didn\u2019t send — try again, or just message us directly.';
+      status.textContent = 'That didn\u2019t send \u2014 try again, or just message us on WhatsApp.';
     });
   });
 })();
